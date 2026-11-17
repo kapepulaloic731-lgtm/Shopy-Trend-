@@ -1,27 +1,18 @@
-name: Extract ZIP
-
-on:
-  push:
-    paths:
-      - '*.zip'
-
+name: Décompresser le zip
+on: workflow_dispatch
+permissions:
+  contents: write
 jobs:
-  extract:
+  unzip:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Extract ZIP
-        run: |
-          unzip -o *.zip -d .
-          rm -f *.zip
-
-      - name: Commit extracted files
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add .
-          git commit -m "Extract website ZIP" || echo "No changes"
+      - uses: actions/checkout@v4
+      - run: |
+          unzip -o shopy-trend.zip
+          cp -r shopy-trend/. .
+          rm -rf shopy-trend shopy-trend.zip
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add -A
+          git commit -m "Ajout du site Shopy Trend"
           git push
